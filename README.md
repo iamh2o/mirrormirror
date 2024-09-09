@@ -7,6 +7,10 @@ For times you wish to to lock your MAC laptop if:
 - Your laptop moves more than a set distance in some period of time.
 
 
+## Pre-Requisites
+- Intended For MAC Laptops ( tested on an Apple silicon M2 air MacOS 14.1.1 (23B81))
+- Conda (all commands can be run with pip as well on the user level if desired and libraries installed with pip).
+
 ## Face Off
 Locks a mac laptop if your face is not detected w/in a set period of time.
  
