@@ -24,8 +24,21 @@ Locks a mac laptop if your face is not detected w/in a set period of time.
 
 ### Environment
 
+#### Brew Stuff
+One dependency is only available via brew.  So, first you'll need brew installed.  Then:
+
 ```bash
-conda create -n MIRRORMIRROR -c conda-forge opencv-python ipython pytesst keyboard blueutil pystray face_recognition
+brew install blueutil
+```
+
+#### Conda Stuff (and by conda, I mean miniconda)
+I use conda b/c it's quick and easy for me. You can also use venvs, pip install this all into your user python, or whatnot.
+
+```bash
+conda create -n MIRRORMIRROR -c conda-forge opencv ipython pytest && \
+conda activate MIRRORMIRROR && \
+pip install pystray
+brew install 
 ```
 
 ### Scripts
