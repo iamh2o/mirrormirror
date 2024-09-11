@@ -8,7 +8,8 @@ For times you wish to to lock your MAC laptop if:
 
 
 ## Pre-Requisites
-- Intended For MAC Laptops ( tested on an Apple silicon M2 air MacOS 14.1.1 (23B81))
+- Intended For MAC Laptops ( tested on an Apple silicon M2 air MacOS 14.1.1 (23B81)). 
+- Brew installed python 3.12 & cmake 3.30.3.arm64 &  dlib-19.24.6 .
 - Conda (all commands can be run with pip as well on the user level if desired and libraries installed with pip).
 
 ## Face Off
@@ -35,7 +36,7 @@ brew install blueutil
 I use conda b/c it's quick and easy for me. You can also use venvs, pip install this all into your user python, or whatnot.
 
 ```bash
-conda create -n MIRRORMIRROR -c conda-forge opencv ipython pytest && \
+conda create -y -n MIRRORMIRROR -c conda-forge python==3.12.2 opencv ipython pytest face_recognition && \
 conda activate MIRRORMIRROR && \
 pip install pystray
 echo "happy birthday!"
@@ -216,3 +217,5 @@ launchctl load ~/Library/LaunchAgents/com.username.butdontgofar.plist # renme to
 ```
 
 
+## Issues Observed
+- The face recognition library had a problem with the conda dlib, which necessitated brew python update and cmake update, then repip installing dlib  dlib-19.24.6.
