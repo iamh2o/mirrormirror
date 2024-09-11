@@ -44,7 +44,7 @@ echo "happy birthday!"
 ### Scripts
 
 #### Face Encoding
-Run `[bin/face_encoding.py](bin/face_encoding.py)`
+Run [`bin/face_encoding.py`](bin/face_encoding.py)
 
 ```python
 import face_recognition
