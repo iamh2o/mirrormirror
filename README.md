@@ -189,6 +189,9 @@ launchctl load ~/Library/LaunchAgents/com.username.youcanleave.plist # rename to
 <hr>
 
 ## But Dont Go Far
+
+![gf](icons/gf_enabled.png)
+
 A script to lock your MAC laptop if it moves more than a set distance in some period of time.
 
 
