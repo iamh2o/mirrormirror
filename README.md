@@ -1,10 +1,11 @@
 # mirrormirror
 _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
 
-> For times you wish to to lock your MAC laptop if:
-- Your face is not detected w/in a set period of time.
-- A specified bluetooth device looses contact with your laptop.
-- Your laptop moves more than a set distance in some period of time.
+> These are three tools for times you wish to immediately automatically lock your MAC laptop if:
+- Your face is not detected w/in a set period of time. <img src="icons/fo_enabled.png" alt="faceoff" style="width:20px; vertical-align:middle;">
+- A specified bluetooth device loses contact with your laptop. <img src="icons/bt_enabled.png" alt="bluetooth_lock" style="width:20px; vertical-align:middle;">
+- Your laptop moves more than a set distance in some period of time. <img src="icons/gf_enabled.png" alt="geo_fence" style="width:20px; vertical-align:middle;">
+
 
 > Note!
 - These default to running the lockscreen condition test every 5s. 
