@@ -46,7 +46,7 @@ I use conda b/c it's quick and easy for me. You can also use venvs, pip install 
 ```bash
 conda create -y -n MIRRORMIRROR -c conda-forge python==3.12.2 opencv ipython pytest face_recognition && \
 conda activate MIRRORMIRROR && \
-pip install pystray pynput
+pip install pystray pynput requests
 echo "happy birthday!"
 ```
 
