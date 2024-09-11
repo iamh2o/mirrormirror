@@ -11,16 +11,17 @@ For times you wish to to lock your MAC laptop if:
 - Intended For MAC Laptops ( tested on an Apple silicon M2 air MacOS 14.1.1 (23B81)). 
 - Brew installed python 3.12 & cmake 3.30.3.arm64 &  dlib-19.24.6 .
 - Conda (all commands can be run with pip as well on the user level if desired and libraries installed with pip).
+- When you first run the scripts, you will be asked by MacOS to monitor inputs (prob from the terminal app you are using), you also will need to allow the same in Privay&Security->Accessibility and allow this app.
 
 ## Face Off
-Locks a mac laptop if your face is not detected w/in a set period of time.
+Locks a mac laptop if your face is not detected w/in a set period of time.  You might need to 
  
 ### Behavior
--  The script does not begin running when the UI boots up and does not begin running when the user ssh's into the machine. It does begin running when the user hits `Command+Shift+X`, and toggles off again when hit again. There is a small `FO` icon in the menu bar indicating the tool is running or not, and may also be clicked to turn on/off. The conda environment MIRRORMIRROR is properly used in automating the script and ongoing running of the script.
+-  The script does not begin running when the UI boots up and does not begin running when the user ssh's into the machine. It does begin running when the user runs the script or configures to auto-load. When running, there is a small smiley face icon in the menu bar indicating the tool is running or suspended, and will dissappear when the tool quits. The conda environment MIRRORMIRROR is properly used in automating the script and ongoing running of the script.
    -  You will need to have encoded your face first.
--  When triggered because the expected face of the allowed user is not detected, the script closes all open applications and locks the screen, requiring re-authentication to unlock (but not with face initially). When logged back in, the script begins again.  When triggered, there is a warning, and a 15 sec delay before the screen is locked and all open apps closed (this delay can not be preempted).  The only actions allowed when this warning appears are save actions in all open apps. 
-  - Exception, the first failed detection, the user is given a warning which locks the screen for 15sec, and only allows 2 more attempts by hitting `command+shift+2` during the warning, After the second failed attempt,  all open applications and windows are closed and screen locked. The user must re-authenticate to log back in.
--  The script does not interfere with the normal operation of the computer, and does not cause any noticeable performance issues.
+-  When triggered because the expected face of the allowed user is not detected, the script locks the screen, requiring re-authentication to unlock (but not with face). When logged back in, the script will be in a toggled off state and only begins if toggled on.  Once turned on and scanning, the only way to disable the feature is to sudo kill the running process, or to allow the lockscreen to be triggered, re-authenticate, and with the tool in a toggled off state, you may quit it.  **It is a design feature that this tool may not be disabled w/out going through a password re-authentication**.
+- If you wish to make this more fussy, please do so! But, I believe for the use case, simple and reactive is best for me.
+
 
 
 ### Environment
@@ -29,7 +30,7 @@ Locks a mac laptop if your face is not detected w/in a set period of time.
 One dependency is only available via brew.  So, first you'll need brew installed.  Then:
 
 ```bash
-brew install blueutil
+brew install blueutil ffmpeg cmake
 ```
 
 #### Conda Stuff (and by conda, I mean miniconda)
@@ -38,7 +39,7 @@ I use conda b/c it's quick and easy for me. You can also use venvs, pip install 
 ```bash
 conda create -y -n MIRRORMIRROR -c conda-forge python==3.12.2 opencv ipython pytest face_recognition && \
 conda activate MIRRORMIRROR && \
-pip install pystray
+pip install pystray pynput
 echo "happy birthday!"
 ```
 
@@ -49,13 +50,18 @@ echo "happy birthday!"
 conda activate MIRRORMIRROR
 ```
 
-#### Face Encoding
+#### FaceOff
+- When running these, you might need to tell your cell phone to disconnect if it tries to be the webcam.  Manually edit `cv2.VideoCapture(0) ` to be 0 or 1 if needed & automate this part if inspired to do so.
+ 
+##### Face Encoding
 Run [`bin/face_encoding.py`](bin/face_encoding.py) to create an encoding of your face.
 
 
 
-#### Face Off Monitoring Tool
+##### Face Off Monitoring Tool
 EDIT [`bin/face_off.py`](bin/face_off.py) to set whatever timout thresholds and point to your face encoding file.  For extra points, rename the file. Then run it.
+
+> Run the script and allow it to fail so that you can grant permission for it to lock the screen on your behalf.
 
 
 ### Automate Enabling Toggle Hotkey And Menu Bar Icon
