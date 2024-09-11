@@ -38,7 +38,7 @@ I use conda b/c it's quick and easy for me. You can also use venvs, pip install 
 conda create -n MIRRORMIRROR -c conda-forge opencv ipython pytest && \
 conda activate MIRRORMIRROR && \
 pip install pystray
-brew install 
+echo "happy birthday!"
 ```
 
 ### Scripts
