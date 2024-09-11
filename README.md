@@ -57,6 +57,9 @@ conda activate MIRRORMIRROR
 ```
 
 #### FaceOff
+
+![faceoff](icons/fo_enabled.png)
+
 - When running these, you might need to tell your cell phone to disconnect if it tries to be the webcam.  Manually edit `cv2.VideoCapture(0) ` to be 0 or 1 if needed & automate this part if inspired to do so.
  
 ##### Face Encoding
@@ -110,6 +113,9 @@ launchctl load ~/Library/LaunchAgents/com.username.faceoff.plist # rename to mat
 
 
 ## You Can Leave
+
+![blueooth_lock](icons/bt_enabled.png)
+
 A tool to lock your MAC laptop if your bluetooth device looses contact with your laptop.
 
 ### Behavior
