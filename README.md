@@ -49,12 +49,19 @@ pip install pystray pynput
 echo "happy birthday!"
 ```
 
-### Scripts
-#### Activate MIRRORMIRROR
+<hr>
+<hr> 
+<hr>
+
+### The Three Tools
+#### First, Activate MIRRORMIRROR
 
 ```bash
 conda activate MIRRORMIRROR
 ```
+
+<hr>
+<hr>
 
 #### FaceOff
 
@@ -109,6 +116,8 @@ Create `~/Library/LaunchAgents/com.$USER.faceoff.plist`, rename to match the abo
 ```bash
 launchctl load ~/Library/LaunchAgents/com.username.faceoff.plist # rename to match scipt name above
 ```
+
+<hr>
 
 
 
@@ -176,6 +185,7 @@ Create` ~/Library/LaunchAgents/com.$USER.youcanleave.plist` (rename to match the
 launchctl load ~/Library/LaunchAgents/com.username.youcanleave.plist # rename to match scipt name above
 ```
 
+<hr>
 
 ## But Dont Go Far
 A script to lock your MAC laptop if it moves more than a set distance in some period of time.
