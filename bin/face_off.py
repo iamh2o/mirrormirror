@@ -160,11 +160,7 @@ def setup_icon():
 
 # Hotkey handler using pynput
 def on_press(key):
-    try:
-        if key == keyboard.HotKey([keyboard.Key.cmd, keyboard.Key.shift], 'x'):
-            toggle_face_recognition()
-    except AttributeError:
-        pass
+    pass
 
 # Set up listener for hotkeys in a separate thread
 def listen_hotkey():

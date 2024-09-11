@@ -1,11 +1,17 @@
 # mirrormirror
 _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
 
-For times you wish to to lock your MAC laptop if:
+> For times you wish to to lock your MAC laptop if:
 - Your face is not detected w/in a set period of time.
-- Your bluetooth device looses contact with your laptop.
+- A specified bluetooth device looses contact with your laptop.
 - Your laptop moves more than a set distance in some period of time.
 
+> Note!
+- These default to running the lockscreen condition test every 5s. 
+- Once enabled, these are designed to require the lockscreen condition to be triggered, and a re-authentication to then disable and quit the tool(s). 
+- If you find this annoying, you probably do not need this tool. 
+- Yahtzee!
+  
 
 ## Pre-Requisites
 - Intended For MAC Laptops ( tested on an Apple silicon M2 air MacOS 14.1.1 (23B81)). 
@@ -67,7 +73,7 @@ EDIT [`bin/face_off.py`](bin/face_off.py) to set whatever timout thresholds and 
 ### Automate Enabling Toggle Hotkey And Menu Bar Icon
 
 #### Create LaunchAgent XML
-
+_launchagent steps not yet tested_
 Create `~/Library/LaunchAgents/com.$USER.faceoff.plist`, rename to match the above script. Use this template:
 
 ```xml
@@ -108,11 +114,7 @@ A tool to lock your MAC laptop if your bluetooth device looses contact with your
 
 ### Behavior
 -  The tool does not begin at boot up or when the user logins in to the UI or by ssh.
--  The tool may be started/stopped by the user with the hotkey `Command + Shift + B`. There is a small `YCL` icon in the menu bar indicating the tool is running or not, and may also be clicked to turn on/off. When the tool is started, it reports the connected bluetooth devices, and allows the user to select the device to monitor, through a simple UI window option of paired devices. When toggling off, the expected bluetooth device is cleared, and when toggled back on the device will need to be specified again by the user.  When triggered, there is a warning, and a 15 sec delay before the screen is locked and all open apps closed (this delay can not be preempted), The only actions allowed when this warning appears are save actions in all open apps.
--  When triggered because the specified device has lost connection, the screen is locked, and all open apps closed, requiring the user to re-authenticate to log back in. When logging back in, the tool is not started automatically.
--  When triggered because the specified device hss lost connection, the user MAY NOT turbn off the tool. Nor may the user click the menu icon to turb off.
--  The tool does not interfere with the normal operation of the computer, and does not cause any noticeable performance issues.
-
+-  The tool may be start the tool by running the script, or automating its launch at runtime. The tool, once running, needs to be specifically enabled to work. There is a small icon in the menu bar indicating the tool is running, and if running, if it is enabled or not. When the tool is started, the menu displays the detected bluetooth devices. You must select a device to monitor before you may enable monitoring for lock condition. When the device is not detected, the lockscreen is brough up and requires re-auth to unlock(assuming this is how your lockscreen is configured). When you re-auth, the tool will still be running, but now disabled. You may now quit it, or select a new device to monitor + enable monitoring.
 
 
 ### Environment
@@ -134,6 +136,7 @@ blueutil --paired
 
 ### Automate Enabling Toggle Hotkey And Menu Bar Icon
 #### Create LaunchAgent XML
+_launchagent steps not yet tested_
 Create` ~/Library/LaunchAgents/com.$USER.youcanleave.plist` (rename to match the above script), use this template::
 
 ```xml
@@ -190,6 +193,7 @@ Edit [`bin/but_dont_go_far.py`](bin/but_dont_go_far.py) to set whatever timout t
 
 ### Automate Enabling Toggle Hotkey And Menu Bar Icon
 #### Create LaunchAgent XML
+_launchagent steps not yet tested_
 Create `~/Library/LaunchAgents/com.$USER.butdontgofar.plist` (rename to match the above script), use this template:
 
 ```xml
