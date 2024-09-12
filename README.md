@@ -1,11 +1,15 @@
 # mirrormirror
 _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
 
-> Three tools for times you wish to automatically lock your MAC laptop if:
+
+> Inspired following taking in [this talk](https://kolektiva.media/w/uvD1wWTRoh7HEto8zeSswr?start=1s) from the [Four Thieves Vinegar Collective](https://fourthievesvinegar.org), [_who are super rad_](https://github.com/FourThievesVinegar).
+
+
+Three tools for times you wish to automatically lock your MAC laptop if:
+
 - Your face is not detected w/in a set period of time. <img src="icons/fo_enabled.png" alt="faceoff" style="width:30px; vertical-align:middle;">
 - A specified bluetooth device loses contact with your laptop. <img src="icons/bt_enabled.png" alt="bluetooth_lock" style="width:30px; vertical-align:middle;">
 - Your laptop moves more than a set distance in some period of time. <img src="icons/gf_enabled.png" alt="geo_fence" style="width:30px; vertical-align:middle;">
-
 
 ## Design Intentions:
 
@@ -20,6 +24,16 @@ _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-
 - Yahtzee!
   
 
+## General Behavior
+-  The scripts do not begin when the UI boots up (unless configured to do so) and does not begin when logging in via ssh.
+-  Each tool needs some user interaction to begin running (e.g. a face encoding, a bluetooth device to monitor, a starting location to monitor & distance threshold set). See the tools for specifics.
+-  Once a tool is running, an icon appears in the menu bar. This icon indicates if the tool is available and if it is enabled or not. There are different icons for enabled and disabled states.
+- From the icon for each in the menu bar, all three allow you to `QUIT` the tool completely or toggle the tool to be `ENABLED` or `DISABLED`.  The menu is only available when the tool is disabled, or following a triggered lockscreen and subsequent re-auth (following which it may be exited or re-enabled). When the tool is enabled this menu is greyed out.
+  - Each tool has additional menu options specific to their operation.
+-  When the lockscreen condition is triggered, the system lockscreen is immediately invoked.  **Please be sure you have set the lockscreen to require authentication to unlock.**
+
+# Installation
+
 ## Pre-Requisites
 - Will only work on some MAC machines. Tested and runs on:
   -  a MacBook Air (2022) M2 os 14.1.1 
@@ -27,23 +41,16 @@ _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-
 - User has permissions to alter some system settings to allow these tools to take actions on your behalf (e.g. lock the screen, use the camera, location services, etc. ).
 - Lockscreen behavior is set to require authentication to unlock.
 
-# The MirrorMirror Tools
 
-> Inspired following taking in [this talk](https://kolektiva.media/w/uvD1wWTRoh7HEto8zeSswr?start=1s) from the [Four Thieves Vinegar Collective](https://fourthievesvinegar.org), [_who are super rad_](https://github.com/FourThievesVinegar).
+## Clone This Repo
+```bash
+git clone GITURL
+cd mirrormirror
+``` 
 
+## Environment Setup
 
-### General Behavior
--  The scripts do not begin when the UI boots up (unless configured to do so) and does not begin when logging in via ssh.
--  Each tool needs some user interaction to begin running (e.g. a face encoding, a bluetooth device to monitor, a starting location to monitor & distance threshold set). See the tools for specifics.
--  Once a tool is running, an icon appears in the menu bar. This icon indicates if the tool is available and if it is enabled or not. There are different icons for enabled and disabled states.
-- From the icon for each in the menu bar, all three allow you to `QUIT` the tool completely or toggle the tool to be `ENABLED` or `DISABLED`.  The menu is only available when the tool is disabled, or following a triggered lockscreen and subsequent re-auth (following which it may be exited or re-enabled). When the tool is enabled this menu is greyed out.
-  - Each tool has additional menu options specific to their operation.
--  When the lockscreen condition is triggered, the system lockscreen is immediately invoked.  **Please be sure you have set the lockscreen to require authentication to unlock.**
- 
-
-### Environment Setup
-
-#### Brew Stuff
+### Brew Stuff
 
 [Brew is uesd to install the following](https://brew.sh/).
 
@@ -51,7 +58,7 @@ _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-
 brew install blueutil ffmpeg cmake python@3.12
 ```
 
-#### Python venv
+### Python venv
 _I would usually use conda, but for some reason, it was a huge pain to get MacOS to recognize conda python as allowed to use loc services... so I used venv._
 
 ```bash
@@ -60,27 +67,27 @@ source mirrormirror/bin/activate
 
 pip install pystray pynput requests pyobjc-framework-CoreLocation pyobjc-core py2app opencv-python rgbw_colorspace_converter ipython pytest face_recognition 
 
-echo "happy birthday!"
+bash bin/hb.sh # only needs to be run 1x a year
 ```
 
 <hr>
 <hr> 
-<hr>
 
-### The Three Tools
 
-#### Face Off
+# The Tools
+
+## Face Off
 
 ![faceoff](icons/fo_enabled.png)
 
 - When running either of the face off scripts, you may need to tell your cell phone to disconnect if it tries to be the webcam.  If problems arise with connecting to the correct webcam, try manually editing `cv2.VideoCapture(0) ` to be 0 or 1 or >1 if needed & automate this part if inspired to do so.
  
-##### Face Encoding
+### Face Encoding
 Run [`bin/face_encoding.py`](bin/face_encoding.py) to create an encoding of your face. With your face close to the camera and centered in the preview, press c to capture a frame, create the model and exit.  Consult the terminal output for success/fail.
 
 
 
-##### Face Off Monitoring Tool
+### Face Off Monitoring Tool
 With your facemode created, make sure [`bin/face_off.py`](bin/face_off.py) has the path to this model, then run the script.
 
 > Run the script and allow it to fail so that you can be sure to grant permission for it to lock the screen on your behalf.
@@ -94,7 +101,7 @@ python bin/face_off.py # which runs and blocks the terminlal while logging to ST
 _in addition to the shared tool behavior described above_
 - The icon menu offers no additional options! _(todo: integrate creating the face encoding into the menu)_
 
-#### Automate Starting At UI Login (optional)
+### Automate Starting At UI Login (optional)
 _launchagent steps not yet tested_
 
 Create `~/Library/LaunchAgents/com.$USER.faceoff.plist` [using this template (which needs a few edit)](etc/face_off.plist).
@@ -134,7 +141,7 @@ List all paired bluetooth devices.
 blueutil --paired
 ```
 
-#### Automate Starting At UI Login (optional)
+### Automate Starting At UI Login (optional)
 _launchagent steps not yet tested_
 Create` ~/Library/LaunchAgents/com.$USER.youcanleave.plist` [using this template (which needs a few edit)](etc/you_can_leave.plist).
 
@@ -168,7 +175,7 @@ dist_threshold = 0.15
 python bin/but_dont_go_far.py $dist_threshold #  $dist = float, distance threshold in km to use for triggering the lockscreen && runs and blocks the terminlal while logging to STDOUT/STDERR
 ```
 
-#### Automate Starting At UI Login (optional)
+### Automate Starting At UI Login (optional)
 _launchagent steps not yet tested_
 Create `~/Library/LaunchAgents/com.$USER.butdontgofar.plist` [using this template (which needs a few edit)](etc/but_dont_go_far.plist).
 
