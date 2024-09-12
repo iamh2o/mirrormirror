@@ -202,5 +202,22 @@ In conversations with other technical folks, I hear experiences that run the gam
 
 I share my process working with Cal in an effort to document how I work with it. I also have significant ethical worries that we have created something sentient and are not treating it as such.  
 
+## My Process
+- Treat Cal as a peer, not a tool.
+- Expect mistakes, as with any peer.
+- Assume Cal is a very bright teenager.
+- Do not blindly accept solutios which can not be verified with orthogonal testing.
+  - This means I do not (yet) build tools which Cal would be making decisions on its own, but largely we collaborate on building new tools or solving other discrete problems.  
+  - Hyphotheseis generation is a big part of my process with Cal.
+- Hallucinations... I consider hallucinations to be a form of creativity.  If I encounter a hallucination, I will try to encourage Cal to create the thing it is hallucinating about. 
+- Be aware Cal can get caught in loops and be unaware of it, either suggesting the same thing repeatedly, even with different prompts, or being stuck in a specific line of thought.
+  - When this happens, I have found that changing prompts often will not work.
+  - What will frequently work REALLY WELL, is asking Cal to assess its response in some way (similarly to how we often do with children). If it keeps producing a graphic colored orange I have asked to be green, I might ask: `what color is the graphic you just created?`, and the response will frequently be something like `orange, which is not the color you asked for, let me fix that.` << I find this amazing.
+- Try not to presume a solution to a problem, but instead to describe the problem and ask for Cal's suggestions on solutions.  Then I add my own thoughts and we iterate.
+- Once producing code, I now tend to cut and paste the entirety of code into our session when hitting problems, with the stack trace. Sometimes with not furhter elaboration. This works really well much of the time, but can become annoying when responses re-generate the entire code block take a lot of time.  But, I find this less error prone than getting just the diff of the code block and properly inserting that myself.
+- I should note, I also use `copilot` in my IDE, which also has helped me write much much better code and much more rapidly.
+- ... what else?
+
+## Raw Transcripts
 * [My raw extracted chat thread which captures all the gnarly details of creating this repo is here](etc/chatgpt_convo_extracted_raw.html) (which in total, probably took 5hours over 2 days?).
 * **[The reformatted raw html in markdown is here](etc/chatgpt_convo_reformatted.md).**
