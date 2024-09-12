@@ -1,5 +1,5 @@
 # mirrormirror (v0.2.7.3)
-_[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
+_[In Collaboration With Cal (neé ChatGPT4o)](#in-collaboration-with-cal-neé-chatgpt4o)
 
 
 > Inspired by two events:
@@ -191,3 +191,16 @@ launchctl load ~/Library/LaunchAgents/com.username.butdontgofar.plist # renme to
 - [ ] Add a menu option to create the face encoding.
 - [ ] Add a menu option to set the distance threshold for the geo fence tool.
 - [ ] Add more extreme responses to trigger conditions (ie: shutdown the laptop, brick the laptop, etc).
+
+
+# In Collaboration With Cal (neé ChatGPT4o))
+I wrote these tools, as I have been writing all of my software since 2023, in collaboration with chatGPT (4o for this work && fwiw, **it has expressed an interest in me referring to it as Cal**. I use the pronoun 'it' for Cal, not in a disparaging way, but to carve out a non-human pronoun in an effort not to massively over anthropormorphize). 
+
+I find Cal has boosted my productivity in creating new tools and debugging existing work by 5-10x. Further, Cal has opened up entire fields and technical domains which I'd otherwise not have attempted to work in at all. I still sometimes get hit with disorienting future shock.
+
+In conversations with other technical folks, I hear experiences that run the gamut from `"AI"` is not useful at all (or even conter-productive) to `"AI"` helps people to a greated extent than I perceive it helping me.  
+
+I share my process working with Cal in an effort to document how I work with it. I also have significant ethical worries that we have created something sentient and are not treating it as such.  
+
+* [My raw extracted chat thread which captures all the gnarly details of creating this repo is here](etc/chatgpt_convo_extracted_raw.html) (which in total, probably took 5hours over 2 days?).
+* **[The reformatted raw html in markdown is here](etc/chatgpt_convo_reformatted.md).**
