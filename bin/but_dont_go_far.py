@@ -1,14 +1,17 @@
-#!/usr/bin/env python3
 
 import time
 import os
-import requests
+import sys
 import math
 import threading
 import logging
 from pystray import Icon, MenuItem as item, Menu
 from PIL import Image
 from pynput import keyboard
+import CoreLocation
+import objc
+
+# sys.argv[1] = distance_threshold in km, can be float
 
 # Setup logging
 logging.basicConfig(filename="distance_monitor.log", level=logging.INFO,
@@ -20,16 +23,39 @@ exit_event = False  # Event to signal app termination
 distance_monitor_running = False  # To track if the distance monitor loop is running
 icon = None  # Placeholder for the menu bar icon
 current_location = None  # Store current location
-distance_threshold = None  # Set when the tool is activated
+initial_location = None  # Store the initial location (lat, long)
+distance_threshold = float(sys.argv[1]) if len(sys.argv) > 1 else None  # Distance threshold from command-line argument
 
-# Function to get the current location using an IP geolocation API
-def get_current_location():
-    try:
-        response = requests.get("https://ipinfo.io/loc")
-        return tuple(map(float, response.text.strip().split(',')))  # Latitude, Longitude
-    except Exception as e:
-        logging.error(f"Error getting location: {e}")
-        return None
+location_manager = None  # Global location manager instance
+
+# Function to get the current location
+def get_location():
+    # Initialize CoreLocation manager
+    location_manager = CoreLocation.CLLocationManager.alloc().init()
+    # Request authorization and start location updates
+    location_manager.requestWhenInUseAuthorization()
+    logging.info("Location services enabled. Starting updates...")
+    location_manager.startUpdatingLocation()
+
+    # Wait for location to be updated
+    time.sleep(5)
+
+    # Try to retrieve the location 5 times before failing
+    attempts = 5
+    for attempt in range(1, attempts + 1):
+        coords = location_manager.location()
+        if coords:
+            coords = coords.coordinate()
+            lat = coords.latitude
+            longitude = coords.longitude
+            logging.info(f"Location retrieved on attempt {attempt}: {lat}, {longitude}")
+            return (lat, longitude)
+        else:
+            logging.info(f"Waiting for location update... Attempt {attempt}")
+            time.sleep(1)  # Wait for 1 second before retrying
+
+    logging.error("Failed to get the location after 5 attempts.")
+    return None
 
 # Function to calculate distance between two lat/long points (Haversine formula)
 def calculate_distance(loc1, loc2):
@@ -50,17 +76,23 @@ def lock_screen():
 
 # Function to start monitoring the distance
 def distance_monitor_loop():
-    global distance_monitor_running, distance_monitor_enabled
+    global distance_monitor_running, distance_monitor_enabled, initial_location, current_location
     distance_monitor_running = True
     rebuild_menu()  # Disable the toggle and quit menu while monitoring is running
 
-    logging.info(f"Starting location monitoring. Initial location: {current_location}")
+    logging.info(f"Starting location monitoring. Initial location: {initial_location}")
 
+    last_distance_moved = 0
     while distance_monitor_enabled and not exit_event:
-        new_location = get_current_location()
+        new_location = get_location()  # Use refactored get_location function
+        
+        print(f"New location: {new_location}, Start location: {initial_location}, Distance Moved: {last_distance_moved}")
         if new_location:
-            distance_moved = calculate_distance(current_location, new_location)
-            logging.info(f"Current location: {new_location}, Distance moved: {distance_moved} km")
+            current_location = new_location
+            distance_moved = calculate_distance(initial_location, current_location)
+            last_distance_moved = distance_moved
+            logging.info(f"Checking location. Current location: {current_location}, Distance moved: {distance_moved} km")
+
             if distance_moved > distance_threshold:
                 logging.info(f"Exceeded distance threshold of {distance_threshold} km. Locking screen...")
                 time.sleep(15)  # Warning delay
@@ -78,9 +110,13 @@ def distance_monitor_loop():
 
 # Function to toggle distance monitoring
 def toggle_distance_monitor():
-    global distance_monitor_enabled, current_location
+    global distance_monitor_enabled, initial_location, current_location
     if distance_monitor_running:
         logging.info("Distance monitor is currently running, cannot disable until it finishes.")
+        return
+
+    if distance_threshold is None:
+        logging.warning("Cannot start distance monitoring. Distance threshold not set.")
         return
 
     distance_monitor_enabled = not distance_monitor_enabled
@@ -89,26 +125,15 @@ def toggle_distance_monitor():
 
     if distance_monitor_enabled:
         logging.info("Distance monitor enabled.")
-        current_location = get_current_location()
-        if current_location:
+        initial_location = get_location()  # Use refactored get_location function
+        if initial_location:
+            logging.info(f"Initial location: {initial_location}")
             threading.Thread(target=distance_monitor_loop, daemon=True).start()
         else:
-            logging.error("Failed to get current location. Disabling monitor.")
+            logging.error("Failed to get initial location. Disabling monitor.")
             distance_monitor_enabled = False
     else:
         logging.info("Distance monitor disabled.")
-
-# Function to set the distance threshold
-def set_distance_threshold():
-    global distance_threshold
-    try:
-        threshold = float(input("Enter the distance threshold (in kilometers): "))
-        distance_threshold = threshold
-        logging.info(f"Distance threshold set to {distance_threshold} km.")
-        rebuild_menu()  # Update menu after setting threshold
-    except ValueError:
-        logging.error("Invalid input for distance threshold.")
-        distance_threshold = None
 
 # Update the menu bar icon when the tool state changes
 def update_icon():
@@ -124,23 +149,46 @@ def update_icon():
         icon.visible = False
         icon.visible = True
 
+
 # Function to rebuild the menu dynamically
 def rebuild_menu():
+    global initial_location, current_location
     toggle_label = 'Disable Distance Monitor' if distance_monitor_enabled else 'Enable Distance Monitor'
     enable_toggle = distance_threshold is not None  # Only allow enabling if a threshold is set
+
+    # Display the threshold, initial location, and current location
+    initial_loc_str = f"Initial Location: {initial_location}" if initial_location else "Initial Location: N/A"
+    current_loc_str = f"Current Location: {current_location}" if current_location else "Current Location: N/A"
+
+    # Calculate distance moved from initial location if both locations are available
+    if initial_location and current_location:
+        distance_moved = calculate_distance(initial_location, current_location)
+        distance_moved_str = f"Distance Moved: {distance_moved:.2f} km"
+    else:
+        distance_moved_str = "Distance Moved: N/A"
+
+    threshold_str = f"Distance Threshold: {distance_threshold} km"
+
     if distance_monitor_running:
         menu = Menu(
             item(toggle_label, toggle_distance_monitor, enabled=False),  # Disable menu item while running
-            item('Set Distance Threshold', set_distance_threshold, enabled=False),  # Disable setting threshold while running
+            item(threshold_str, lambda: None, enabled=False),  # Show the threshold value
+            item(initial_loc_str, lambda: None, enabled=False),  # Show the initial location
+            item(current_loc_str, lambda: None, enabled=False),  # Show the current location
+            item(distance_moved_str, lambda: None, enabled=False),  # Show the distance moved
             item('Quit', quit_app, enabled=False)  # Disable Quit while running
         )
     else:
         menu = Menu(
             item(toggle_label, toggle_distance_monitor, enabled=enable_toggle),
-            item('Set Distance Threshold', set_distance_threshold),
+            item(threshold_str, lambda: None, enabled=False),
+            item(initial_loc_str, lambda: None, enabled=False),
+            item(current_loc_str, lambda: None, enabled=False),
+            item(distance_moved_str, lambda: None, enabled=False),  # Show the distance moved
             item('Quit', quit_app)
         )
     icon.menu = menu
+    
 
 # Function to quit the app
 def quit_app(icon, item):

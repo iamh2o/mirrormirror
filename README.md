@@ -17,21 +17,20 @@ _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-
 ## Pre-Requisites
 - Intended For MAC Laptops ( tested on an Apple silicon M2 air MacOS 14.1.1 (23B81)). 
 - Brew installed python 3.12 & cmake 3.30.3.arm64 &  dlib-19.24.6 .
-- Conda (all commands can be run with pip as well on the user level if desired and libraries installed with pip).
 - When you first run the scripts, you will be asked by MacOS to monitor inputs (prob from the terminal app you are using), you also will need to allow the same in Privay&Security->Accessibility and allow this app.
 
 ## Face Off
 Locks a mac laptop if your face is not detected w/in a set period of time.  You might need to 
  
 ### Behavior
--  The script does not begin running when the UI boots up and does not begin running when the user ssh's into the machine. It does begin running when the user runs the script or configures to auto-load. When running, there is a small smiley face icon in the menu bar indicating the tool is running or suspended, and will dissappear when the tool quits. The conda environment MIRRORMIRROR is properly used in automating the script and ongoing running of the script.
+-  The script does not begin running when the UI boots up and does not begin running when the user ssh's into the machine. It does begin running when the user runs the script or configures to auto-load. When running, there is a small smiley face icon in the menu bar indicating the tool is running or suspended, and will dissappear when the tool quits. 
    -  You will need to have encoded your face first.
 -  When triggered because the expected face of the allowed user is not detected, the script locks the screen, requiring re-authentication to unlock (but not with face). When logged back in, the script will be in a toggled off state and only begins if toggled on.  Once turned on and scanning, the only way to disable the feature is to sudo kill the running process, or to allow the lockscreen to be triggered, re-authenticate, and with the tool in a toggled off state, you may quit it.  **It is a design feature that this tool may not be disabled w/out going through a password re-authentication**.
 - If you wish to make this more fussy, please do so! But, I believe for the use case, simple and reactive is best for me.
 
 
 
-### Environment
+### Environment Setup
 
 #### Brew Stuff
 One dependency is only available via brew.  So, first you'll need brew installed.  Then:
@@ -40,13 +39,15 @@ One dependency is only available via brew.  So, first you'll need brew installed
 brew install blueutil ffmpeg cmake
 ```
 
-#### Conda Stuff (and by conda, I mean miniconda)
-I use conda b/c it's quick and easy for me. You can also use venvs, pip install this all into your user python, or whatnot.
+#### Python venv
+_I would usually use conda, but for some reason, it was a huge pain to get MacOS to recognize conda python as allowed to use loc services... so I used venv._
 
 ```bash
-conda create -y -n MIRRORMIRROR -c conda-forge python==3.12.2 opencv ipython pytest face_recognition && \
-conda activate MIRRORMIRROR && \
-pip install pystray pynput requests
+python3.12 -m venv mirrormirror
+source mirrormirror/bin/activate
+
+pip install pystray pynput requests pyobjc-framework-CoreLocation pyobjc-core py2app opencv-python  ipython pytest face_recognition 
+
 echo "happy birthday!"
 ```
 
@@ -55,10 +56,10 @@ echo "happy birthday!"
 <hr>
 
 ### The Three Tools
-#### First, Activate MIRRORMIRROR
+#### First, Activate `mirrormirror` venv
 
 ```bash
-conda activate MIRRORMIRROR
+source mirrormirror/bin/activate
 ```
 
 <hr>
@@ -96,7 +97,7 @@ Create `~/Library/LaunchAgents/com.$USER.faceoff.plist`, rename to match the abo
     <string>com.username.faceoff</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/path/to/conda/envs/MIRRORMIRROR/bin/python</string>
+        <string>/path/to/venv/mirrormirror/bin/python</string>
         <string>/path/to/face_off.py</string>
     </array>
     <key>RunAtLoad</key>
@@ -129,15 +130,17 @@ launchctl load ~/Library/LaunchAgents/com.username.faceoff.plist # rename to mat
 A tool to lock your MAC laptop if your bluetooth device looses contact with your laptop.
 
 ### Behavior
--  The tool does not begin at boot up or when the user logins in to the UI or by ssh.
--  The tool may be start the tool by running the script, or automating its launch at runtime. The tool, once running, needs to be specifically enabled to work. There is a small icon in the menu bar indicating the tool is running, and if running, if it is enabled or not. When the tool is started, the menu displays the detected bluetooth devices. You must select a device to monitor before you may enable monitoring for lock condition. When the device is not detected, the lockscreen is brough up and requires re-auth to unlock(assuming this is how your lockscreen is configured). When you re-auth, the tool will still be running, but now disabled. You may now quit it, or select a new device to monitor + enable monitoring.
+- The tool does not begin at boot up or when the user logins in to the UI or by ssh. The script must be started manually, or may be automated to start when the UI is logged into.
+-  The tool, once running, needs to be specifically enabled to begin its work. 
+-  There is a small icon in the menu bar indicating the tool is running and if it is enabled or not. 
+- When the tool is started, the menu displays the detected bluetooth devices. Select a device to monitor before you may enable monitoring for lock condition. When the device is not detected, the lockscreen is brough up and requires re-auth to unlock(assuming this is how your lockscreen is configured). When you re-auth, the tool will still be running, but now disabled. You may now quit it, or select a new device to monitor + enable monitoring.
 
 
 ### Environment
-#### Activate MIRRORMIRROR
+#### Activate MIRRORMIRROR venv
 
 ```bash
-conda activate MIRRORMIRROR
+source mirrormirror/bin/activate
 ```
 
 
@@ -164,7 +167,7 @@ Create` ~/Library/LaunchAgents/com.$USER.youcanleave.plist` (rename to match the
     <string>com.username.youcanleave</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/path/to/conda/envs/MIRRORMIRROR/bin/python</string>
+        <string>/path/to/venv/mirrormirror/bin/python</string>
         <string>/path/to/bluetooth_lock.py</string>
     </array>
     <key>RunAtLoad</key>
@@ -189,20 +192,21 @@ launchctl load ~/Library/LaunchAgents/com.username.youcanleave.plist # rename to
 <hr>
 
 ## But Dont Go Far
-A script to lock your MAC laptop if it moves more than a set distance in some period of time.
+_not quite tested for location violation triggering_
+A script to lock your MAC laptop if it moves more than a set distance from the starting location the tool detected in some period of time.
 
 
 ### Behavior
-- The tool does not begin at boot up or when the user logins in to the UI or by ssh.
-- The tool may be started/stopped by the user with the hotkey `Command + Shift + G`. There is a small `DGF` icon in the menu bar indicating the tool is running or not, and may also be clicked to turn on/off. When the tool is started, it reports the current address detected, and asks the user to specify how many miles as a float will trigger the tool to lock and close all windows, requiring a user to re-auth to log back in.  When toggling off, the specified address and distance tolock us cleared and will be reprompted when the user toggles this tool back on. When triggered, there is a warning, and a 15 sec delay before the screen is locked and all open apps closed (this delay can not be preempted). The only actions allowed when this warning appears are save actions in all open apps
-- When triggered because the specified device has lost connection, the screen is locked, and all open apps closed, requiring the user to re-authenticate to log back in. When logging back in, the tool is not started automatically.
-- When triggered because the specified device hss lost connection, the user MAY NOT turbn off the tool. Nor may the user click the menu icon to turb off.
-- The tool does not interfere with the normal operation of the computer, and does not cause any noticeable performance issues.
-
-
+- The tool does not begin at boot up or when the user logins in to the UI or by ssh. The script must be started manually, or may be automated to start when the UI is logged into. The first argument to the tool is a float representing the distance in meters that will trigger the lockscreen. The lat/long of the current laptop location is detected, and every time interval a new lat/long is detected, the distance from the starting location is calculated. If the distance exceeds the threshold, the lockscreen is triggered.
+-  The tool, once running, needs to be specifically enabled to begin its work. 
+-  There is a small icon in the menu bar indicating the tool is running and if it is enabled or not. Once enabled, the tool may only be disabled by triggering the lockscreen condition and re-authenticating, then quitting the tool (or re-enabling it).
 
 ### Environment
-We will use the conda MIRROR environment created above.
+#### Activate MIRRORMIRROR venv
+
+```bash
+source mirrormirror/bin/activate
+```
 
 
 ### Tool Script
@@ -222,7 +226,7 @@ Create `~/Library/LaunchAgents/com.$USER.butdontgofar.plist` (rename to match th
     <string>com.username.butdontgofar</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/path/to/conda/envs/MIRRORMIRROR/bin/python</string>
+        <string>/path/to/venv/mirrormirror/bin/python</string>
         <string>/path/to/distance_lock.py</string>
     </array>
     <key>RunAtLoad</key>
@@ -245,4 +249,4 @@ launchctl load ~/Library/LaunchAgents/com.username.butdontgofar.plist # renme to
 
 
 ## Issues Observed
-- The face recognition library had a problem with the conda dlib, which necessitated brew python update and cmake update, then repip installing dlib  dlib-19.24.6.
+- The face recognition library had a problem with the venvdlib, which necessitated brew python update and cmake update, then re-pip installing dlib  dlib-19.24.6.
