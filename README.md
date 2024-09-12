@@ -1,4 +1,4 @@
-# mirrormirror (v0.2.7.1)
+# mirrormirror (v0.2.7.3)
 _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
 
 
