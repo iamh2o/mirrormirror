@@ -2,7 +2,7 @@
 _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
 
 
-> Inspired following taking in [this talk](https://kolektiva.media/w/uvD1wWTRoh7HEto8zeSswr?start=1s) from the [Four Thieves Vinegar Collective](https://fourthievesvinegar.org), [_who are super rad_](https://github.com/FourThievesVinegar).
+> Inspired after taking in [this talk](https://kolektiva.media/w/uvD1wWTRoh7HEto8zeSswr?start=1s) from the [Four Thieves Vinegar Collective](https://fourthievesvinegar.org), [_who are super rad_](https://github.com/FourThievesVinegar).
 
 
 Three tools for times you wish to automatically lock your MAC laptop if:
@@ -13,10 +13,10 @@ Three tools for times you wish to automatically lock your MAC laptop if:
 
 ## Design Intentions:
 
-- These tools are simple and reactive. They are not designed to be fussy or overly complex.
-- The expectation is that these tools will not run all the time, but in specific scenarious which probably are briefer than longer. All three may be run simultaneously, but this is not the intended use case.
-- Each has their own lockscreen condition trigger and run every 5s or so. I advise against setting significantly longer interval times b/c this will compromise the intended use for these tools.
-- Once running, they may only be disabled via killing the process directly, or via the menu icon, but _ONLY_ only following a triggered lockscreen condition and subsequent user re-auth.
+- These tools are simple and reactive.
+- The expectation is that these tools will not run all the time, but in specific scenarios which probably are briefer than longer. All three may be run simultaneously, but this is not the intended use case.
+- Each has its own lockscreen condition trigger and runs every 5 seconds or so. I advise against setting significantly longer interval times b/c this will compromise the intended use for these tools.
+- Once running, they may only be disabled via killing the process directly, or via the menu icon, but _ONLY_ following a triggered lockscreen condition and subsequent user re-auth.
     > PSA: [>> PLEASE DO NOT USE BIOMETRICS AS AUTHENTICATION <<](https://www.spiceworks.com/it-security/identity-access-management/guest-article/the-real-risks-of-biometric-authentication/).
 
 - Turning them off is intended to be annoying, b/c I wanted to (as best I could) require a password re-authentication before disabling the tools. This is a design feature, not a bug.
@@ -25,7 +25,7 @@ Three tools for times you wish to automatically lock your MAC laptop if:
   
 
 ## General Behavior
--  The scripts do not begin when the UI boots up (unless configured to do so) and does not begin when logging in via ssh.
+-  The scripts do not begin when the UI boots up (unless configured to do so) and do not begin when logging in via SSH.
 -  Each tool needs some user interaction to begin running (e.g. a face encoding, a bluetooth device to monitor, a starting location to monitor & distance threshold set). See the tools for specifics.
 -  Once a tool is running, an icon appears in the menu bar. This icon indicates if the tool is available and if it is enabled or not. There are different icons for enabled and disabled states.
 - From the icon for each in the menu bar, all three allow you to `QUIT` the tool completely or toggle the tool to be `ENABLED` or `DISABLED`.  The menu is only available when the tool is disabled, or following a triggered lockscreen and subsequent re-auth (following which it may be exited or re-enabled). When the tool is enabled this menu is greyed out.
@@ -44,7 +44,7 @@ Three tools for times you wish to automatically lock your MAC laptop if:
 
 ## Clone This Repo
 ```bash
-git clone GITURL
+git clone git@github.com:iamh2o/mirrormirror.git
 cd mirrormirror
 ``` 
 
@@ -52,7 +52,7 @@ cd mirrormirror
 
 ### Brew Stuff
 
-[Brew is uesd to install the following](https://brew.sh/).
+[Brew issed to install the following](https://brew.sh/).
 
 ```bash
 brew install blueutil ffmpeg cmake python@3.12
@@ -88,7 +88,7 @@ Run [`bin/face_encoding.py`](bin/face_encoding.py) to create an encoding of your
 
 
 ### Face Off Monitoring Tool
-With your facemode created, make sure [`bin/face_off.py`](bin/face_off.py) has the path to this model, then run the script.
+With your face model created, make sure [`bin/face_off.py`](bin/face_off.py) has the path to this model, then run the script.
 
 > Run the script and allow it to fail so that you can be sure to grant permission for it to lock the screen on your behalf.
 
@@ -104,7 +104,7 @@ _in addition to the shared tool behavior described above_
 ### Automate Starting At UI Login (optional)
 _launchagent steps not yet tested_
 
-Create `~/Library/LaunchAgents/com.$USER.faceoff.plist` [using this template (which needs a few edit)](etc/face_off.plist).
+Create `~/Library/LaunchAgents/com.$USER.faceoff.plist` [using this template (which needs a few edits)](etc/face_off.plist).
 
 
 And register the launchagent to run at login.
@@ -143,7 +143,7 @@ blueutil --paired
 
 ### Automate Starting At UI Login (optional)
 _launchagent steps not yet tested_
-Create` ~/Library/LaunchAgents/com.$USER.youcanleave.plist` [using this template (which needs a few edit)](etc/you_can_leave.plist).
+Create` ~/Library/LaunchAgents/com.$USER.youcanleave.plist` [using this template (which needs a few edits)](etc/you_can_leave.plist).
 
 And register the launchagent to run at login.
 ```bash
@@ -163,7 +163,7 @@ A script to lock your MAC laptop if it moves more than a specified distance from
 ### Behavior
 _in addition to the shared tool behavior described above_
 - The icon menu reports back the starting `lat/long`, current `lat/long`, the current distance(km) from the starting point and the distance(km) threshold.
-- NOTE: location information is gathered from the CoreLocation framework, which is not as accurate as GPS per se, and its behavior can be a bit unpredictable based on what resourece is being used to assert location (which can change).
+- NOTE: location information is gathered from the CoreLocation framework, which is not as accurate as GPS per se, and its behavior can be a bit unpredictable based on what resource is being used to assert location (which can change).
   - I have tested having this tool run on my laptop on my wireless network, moving to use my cellphone as a hotspot, and traveling with the laptop a few miles away from the starting point.  It worked, but the distance calculations seemed to be not super precise.  I would suggest using 0.15km as the threshold for remaining within a few blocks of the starting point.
 
 ### Tool Script
@@ -177,7 +177,7 @@ python bin/but_dont_go_far.py $dist_threshold #  $dist = float, distance thresho
 
 ### Automate Starting At UI Login (optional)
 _launchagent steps not yet tested_
-Create `~/Library/LaunchAgents/com.$USER.butdontgofar.plist` [using this template (which needs a few edit)](etc/but_dont_go_far.plist).
+Create `~/Library/LaunchAgents/com.$USER.butdontgofar.plist` [using this template (which needs a few edits)](etc/but_dont_go_far.plist).
 
 And register the launchagent to run at login.
 ```bash
