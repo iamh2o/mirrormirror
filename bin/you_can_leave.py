@@ -17,23 +17,25 @@ icon = None  # Placeholder for the menu bar icon
 selected_device_address = None  # To store the selected Bluetooth device address
 device_list = []  # To store available devices
 
+
 # Function to get connected Bluetooth devices
 def get_connected_bluetooth_devices():
     try:
         result = subprocess.run(["blueutil", "--connected"], stdout=subprocess.PIPE)
-        devices = result.stdout.decode('utf-8').strip().split('\n')
+        devices = result.stdout.decode("utf-8").strip().split("\n")
 
         device_info = []
         for device in devices:
-            if 'address' in device:
-                address = device.split(',')[0].split(': ')[1]
-                name = device.split('name: ')[1].split('"')[1]
+            if "address" in device:
+                address = device.split(",")[0].split(": ")[1]
+                name = device.split("name: ")[1].split('"')[1]
                 device_info.append((address, name))
 
         return device_info
     except Exception as e:
         print(f"Error retrieving Bluetooth devices: {e}")
         return []
+
 
 # Function to check if the Bluetooth device is connected
 def check_bluetooth_connection():
@@ -42,8 +44,10 @@ def check_bluetooth_connection():
             print("No Bluetooth device selected.")
             return False
 
-        result = subprocess.run(["blueutil", "--info", selected_device_address], stdout=subprocess.PIPE)
-        output = result.stdout.decode('utf-8')
+        result = subprocess.run(
+            ["blueutil", "--info", selected_device_address], stdout=subprocess.PIPE
+        )
+        output = result.stdout.decode("utf-8")
 
         if "not connected" in output:
             print(f"Bluetooth device {selected_device_address} is disconnected.")
@@ -52,15 +56,21 @@ def check_bluetooth_connection():
             print(f"Bluetooth device {selected_device_address} is connected.")
             return True
         else:
-            print(f"Unable to determine Bluetooth connection status for {selected_device_address}.")
+            print(
+                f"Unable to determine Bluetooth connection status for {selected_device_address}."
+            )
             return False
     except Exception as e:
         print(f"Error checking Bluetooth connection: {e}")
         return False
 
+
 # Function to lock the screen
 def lock_screen():
-    os.system("osascript -e 'tell application \"System Events\" to keystroke \"q\" using {control down, command down}'")
+    os.system(
+        'osascript -e \'tell application "System Events" to keystroke "q" using {control down, command down}\''
+    )
+
 
 # Function to start the Bluetooth monitoring loop
 def bluetooth_lock_loop():
@@ -70,7 +80,9 @@ def bluetooth_lock_loop():
 
     while bluetooth_lock_enabled and not exit_event:
         if not check_bluetooth_connection():
-            print(f"Bluetooth device {selected_device_address} disconnected, locking screen...")
+            print(
+                f"Bluetooth device {selected_device_address} disconnected, locking screen..."
+            )
             lock_screen()
             # Disable the Bluetooth lock after locking the screen
             bluetooth_lock_enabled = False
@@ -82,6 +94,7 @@ def bluetooth_lock_loop():
     bluetooth_lock_running = False
     update_icon()
     rebuild_menu()  # Re-enable the toggle and quit menu after the lock loop stops
+
 
 # Function to toggle the Bluetooth lock tool
 def toggle_bluetooth_lock():
@@ -105,6 +118,7 @@ def toggle_bluetooth_lock():
     else:
         print("Bluetooth lock disabled.")
 
+
 # Function to select a Bluetooth device
 def select_device(device_address, device_name, icon, item):
     global selected_device_address
@@ -112,10 +126,12 @@ def select_device(device_address, device_name, icon, item):
     print(f"Selected Bluetooth device: {device_name} ({device_address})")
     rebuild_menu()
 
+
 # Function to refresh the Bluetooth device list
 def refresh_devices(icon, item):
     print("Refreshing Bluetooth device list...")
     rebuild_menu()
+
 
 # Update the menu bar icon when the tool state changes
 def update_icon():
@@ -131,6 +147,7 @@ def update_icon():
         icon.visible = False
         icon.visible = True
 
+
 # Function to rebuild the menu dynamically
 def rebuild_menu():
     device_items = []
@@ -140,26 +157,41 @@ def rebuild_menu():
     for device_address, device_name in device_list:
         # Use functools.partial to pass additional arguments
         selected_marker = ">> " if device_address == selected_device_address else ""
-        device_items.append(item(f"{selected_marker}Select {device_name}", partial(select_device, device_address, device_name), enabled=not bluetooth_lock_enabled))
+        device_items.append(
+            item(
+                f"{selected_marker}Select {device_name}",
+                partial(select_device, device_address, device_name),
+                enabled=not bluetooth_lock_enabled,
+            )
+        )
 
     # If no device is selected, disable the toggle option
-    toggle_label = 'Disable Bluetooth Lock' if bluetooth_lock_enabled else 'Enable Bluetooth Lock'
-    enable_toggle = bool(selected_device_address)  # Only allow enabling if a device is selected
+    toggle_label = (
+        "Disable Bluetooth Lock" if bluetooth_lock_enabled else "Enable Bluetooth Lock"
+    )
+    enable_toggle = bool(
+        selected_device_address
+    )  # Only allow enabling if a device is selected
     if bluetooth_lock_running:
         menu = Menu(
-            item(toggle_label, toggle_bluetooth_lock, enabled=False),  # Disable menu item while running
-            item('Refresh Devices', refresh_devices, enabled=False),  # Disable refresh while running
-            item('Quit', quit_app, enabled=False),  # Disable Quit while running
-            *device_items  # Add the dynamically generated device menu items
+            item(
+                toggle_label, toggle_bluetooth_lock, enabled=False
+            ),  # Disable menu item while running
+            item(
+                "Refresh Devices", refresh_devices, enabled=False
+            ),  # Disable refresh while running
+            item("Quit", quit_app, enabled=False),  # Disable Quit while running
+            *device_items,  # Add the dynamically generated device menu items
         )
     else:
         menu = Menu(
             item(toggle_label, toggle_bluetooth_lock, enabled=enable_toggle),
-            item('Refresh Devices', refresh_devices),
-            item('Quit', quit_app),
-            *device_items  # Add device selection items
+            item("Refresh Devices", refresh_devices),
+            item("Quit", quit_app),
+            *device_items,  # Add device selection items
         )
     icon.menu = menu
+
 
 # Function to quit the app
 def quit_app(icon, item):
@@ -171,6 +203,7 @@ def quit_app(icon, item):
     exit_event = True
     icon.stop()
 
+
 # Set up pystray for the menu bar icon
 def setup_icon():
     global icon
@@ -178,14 +211,17 @@ def setup_icon():
     rebuild_menu()  # Rebuild the menu with available devices
     icon.run()
 
+
 # Hotkey handler using pynput
 def on_press(key):
     pass
+
 
 # Set up listener for hotkeys in a separate thread
 def listen_hotkey():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
+
 
 # Run the menu bar icon on the main thread
 setup_icon()

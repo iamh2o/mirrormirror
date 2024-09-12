@@ -1,4 +1,3 @@
-
 import cv2
 import time
 import os
@@ -11,7 +10,7 @@ from PIL import Image
 
 # Load your face encoding
 print("Loading face encoding...")
-with open('your_face_encoding.pkl', 'rb') as f:
+with open("your_face_encoding.pkl", "rb") as f:
     my_face_encoding = pickle.load(f)
 
 next_check_time = 5  # seconds
@@ -21,6 +20,7 @@ facecheck_running = False  # To track if face recognition is running
 
 selected_camera = 0  # Automatically select the FaceTime camera (usually index 0)
 
+
 # Function to start face recognition
 def start_face_recognition():
     global facecheck_running
@@ -29,7 +29,9 @@ def start_face_recognition():
 
     try:
         print(f"Starting face recognition on camera {selected_camera}...")
-        cap = cv2.VideoCapture(selected_camera)  # Open the default webcam (FaceTime camera)
+        cap = cv2.VideoCapture(
+            selected_camera
+        )  # Open the default webcam (FaceTime camera)
 
         if not cap.isOpened():
             print(f"Error: Could not open camera {selected_camera}.")
@@ -56,7 +58,9 @@ def start_face_recognition():
             print(f"Found {len(face_encodings)} face encodings in frame.")
             face_recognized = False
             for face_encoding in face_encodings:
-                matches = face_recognition.compare_faces([my_face_encoding], face_encoding, tolerance=0.65)
+                matches = face_recognition.compare_faces(
+                    [my_face_encoding], face_encoding, tolerance=0.65
+                )
                 if matches[0]:
                     print("Your face is recognized.")
                     face_recognized = True
@@ -68,7 +72,9 @@ def start_face_recognition():
                 lock_screen()
                 break
 
-            print(f"Waiting for {next_check_time} sec before next check... be sure you are in front of the camera.")
+            print(
+                f"Waiting for {next_check_time} sec before next check... be sure you are in front of the camera."
+            )
             time.sleep(next_check_time)
 
     except cv2.error as e:
@@ -85,11 +91,14 @@ def start_face_recognition():
         cap.release()
         rebuild_menu()  # Enable the toggle and quit menu after face recognition stops
 
+
 # Function to toggle face recognition on or off
 def toggle_face_recognition():
     global enabled
     if facecheck_running:
-        print("Face recognition is currently running, cannot disable until it finishes.")
+        print(
+            "Face recognition is currently running, cannot disable until it finishes."
+        )
         return
 
     enabled = not enabled
@@ -103,10 +112,14 @@ def toggle_face_recognition():
     else:
         print("Face recognition disabled.")
 
+
 # Function to lock the screen
 def lock_screen():
     print("Locking the screen...")
-    os.system("osascript -e 'tell application \"System Events\" to keystroke \"q\" using {control down, command down}'")
+    os.system(
+        'osascript -e \'tell application "System Events" to keystroke "q" using {control down, command down}\''
+    )
+
 
 # Function to update the menu bar icon when the state changes
 def update_icon():
@@ -122,20 +135,24 @@ def update_icon():
         icon.visible = False
         icon.visible = True
 
+
 # Function to rebuild the menu dynamically
 def rebuild_menu():
-    label = 'Disable Face Off' if enabled else 'Enable Face Off'
+    label = "Disable Face Off" if enabled else "Enable Face Off"
     if facecheck_running:
         menu = Menu(
-            item(label, toggle_face_recognition, enabled=False),  # Disable menu item while running
-            item('Quit', quit_app, enabled=False)  # Disable Quit while running
+            item(
+                label, toggle_face_recognition, enabled=False
+            ),  # Disable menu item while running
+            item("Quit", quit_app, enabled=False),  # Disable Quit while running
         )
     else:
         menu = Menu(
             item(label, toggle_face_recognition),  # Enable after re-authentication
-            item('Quit', quit_app)
+            item("Quit", quit_app),
         )
     icon.menu = menu
+
 
 # Function to quit the app
 def quit_app(icon, item):
@@ -147,24 +164,30 @@ def quit_app(icon, item):
     exit_event = True
     icon.stop()
 
+
 # Set up pystray for the menu bar icon
 def setup_icon():
     global icon
     menu = Menu(
-        item('Enable Face Off', toggle_face_recognition),  # Initial label is 'Enable Face Off'
-        item('Quit', quit_app)
+        item(
+            "Enable Face Off", toggle_face_recognition
+        ),  # Initial label is 'Enable Face Off'
+        item("Quit", quit_app),
     )
     icon = Icon("Face Off", Image.open("icons/fo_disabled.png"), menu=menu)
     icon.run()
+
 
 # Hotkey handler using pynput
 def on_press(key):
     pass
 
+
 # Set up listener for hotkeys in a separate thread
 def listen_hotkey():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
+
 
 # Run the menu bar icon on the main thread
 setup_icon()

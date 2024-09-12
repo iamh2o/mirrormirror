@@ -6,6 +6,7 @@ import logging
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
+
 def get_location():
     # Initialize CoreLocation manager and delegate
     location_manager = CoreLocation.CLLocationManager.alloc().init()
@@ -34,6 +35,7 @@ def get_location():
 
     logging.error("Failed to get the location after 5 attempts.")
     return None
+
 
 # Fetch location
 if __name__ == "__main__":

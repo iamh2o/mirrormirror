@@ -1,4 +1,3 @@
-
 import time
 import os
 import sys
@@ -14,8 +13,11 @@ import objc
 # sys.argv[1] = distance_threshold in km, can be float
 
 # Setup logging
-logging.basicConfig(filename="distance_monitor.log", level=logging.INFO,
-                    format="%(asctime)s - %(message)s")
+logging.basicConfig(
+    filename="distance_monitor.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(message)s",
+)
 
 wait_time_to_check_location = 10  # Check location every n seconds
 distance_monitor_enabled = False  # Start disabled by default
@@ -24,9 +26,12 @@ distance_monitor_running = False  # To track if the distance monitor loop is run
 icon = None  # Placeholder for the menu bar icon
 current_location = None  # Store current location
 initial_location = None  # Store the initial location (lat, long)
-distance_threshold = float(sys.argv[1]) if len(sys.argv) > 1 else None  # Distance threshold from command-line argument
+distance_threshold = (
+    float(sys.argv[1]) if len(sys.argv) > 1 else None
+)  # Distance threshold from command-line argument
 
 location_manager = None  # Global location manager instance
+
 
 # Function to get the current location
 def get_location():
@@ -57,6 +62,7 @@ def get_location():
     logging.error("Failed to get the location after 5 attempts.")
     return None
 
+
 # Function to calculate distance between two lat/long points (Haversine formula)
 def calculate_distance(loc1, loc2):
     R = 6371.0  # Earth radius in kilometers
@@ -65,14 +71,21 @@ def calculate_distance(loc1, loc2):
     dlat = lat2 - lat1
     dlon = lon2 - lon1
 
-    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+    a = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c  # Distance in kilometers
+
 
 # Function to lock the screen
 def lock_screen():
     logging.info("Locking the screen...")
-    os.system("osascript -e 'tell application \"System Events\" to keystroke \"q\" using {control down, command down}'")
+    os.system(
+        'osascript -e \'tell application "System Events" to keystroke "q" using {control down, command down}\''
+    )
+
 
 # Function to start monitoring the distance
 def distance_monitor_loop():
@@ -85,16 +98,22 @@ def distance_monitor_loop():
     last_distance_moved = 0
     while distance_monitor_enabled and not exit_event:
         new_location = get_location()  # Use refactored get_location function
-        
-        print(f"New location: {new_location}, Start location: {initial_location}, Distance Moved: {last_distance_moved}")
+
+        print(
+            f"New location: {new_location}, Start location: {initial_location}, Distance Moved: {last_distance_moved}"
+        )
         if new_location:
             current_location = new_location
             distance_moved = calculate_distance(initial_location, current_location)
             last_distance_moved = distance_moved
-            logging.info(f"Checking location. Current location: {current_location}, Distance moved: {distance_moved} km")
+            logging.info(
+                f"Checking location. Current location: {current_location}, Distance moved: {distance_moved} km"
+            )
 
             if distance_moved > distance_threshold:
-                logging.info(f"Exceeded distance threshold of {distance_threshold} km. Locking screen...")
+                logging.info(
+                    f"Exceeded distance threshold of {distance_threshold} km. Locking screen..."
+                )
                 time.sleep(15)  # Warning delay
                 lock_screen()
                 # Disable the distance monitor after locking the screen
@@ -108,11 +127,14 @@ def distance_monitor_loop():
     update_icon()
     rebuild_menu()  # Re-enable the toggle and quit menu after monitoring stops
 
+
 # Function to toggle distance monitoring
 def toggle_distance_monitor():
     global distance_monitor_enabled, initial_location, current_location
     if distance_monitor_running:
-        logging.info("Distance monitor is currently running, cannot disable until it finishes.")
+        logging.info(
+            "Distance monitor is currently running, cannot disable until it finishes."
+        )
         return
 
     if distance_threshold is None:
@@ -135,6 +157,7 @@ def toggle_distance_monitor():
     else:
         logging.info("Distance monitor disabled.")
 
+
 # Update the menu bar icon when the tool state changes
 def update_icon():
     if distance_monitor_enabled:
@@ -153,12 +176,26 @@ def update_icon():
 # Function to rebuild the menu dynamically
 def rebuild_menu():
     global initial_location, current_location
-    toggle_label = 'Disable Distance Monitor' if distance_monitor_enabled else 'Enable Distance Monitor'
-    enable_toggle = distance_threshold is not None  # Only allow enabling if a threshold is set
+    toggle_label = (
+        "Disable Distance Monitor"
+        if distance_monitor_enabled
+        else "Enable Distance Monitor"
+    )
+    enable_toggle = (
+        distance_threshold is not None
+    )  # Only allow enabling if a threshold is set
 
     # Display the threshold, initial location, and current location
-    initial_loc_str = f"Initial Location: {initial_location}" if initial_location else "Initial Location: N/A"
-    current_loc_str = f"Current Location: {current_location}" if current_location else "Current Location: N/A"
+    initial_loc_str = (
+        f"Initial Location: {initial_location}"
+        if initial_location
+        else "Initial Location: N/A"
+    )
+    current_loc_str = (
+        f"Current Location: {current_location}"
+        if current_location
+        else "Current Location: N/A"
+    )
 
     # Calculate distance moved from initial location if both locations are available
     if initial_location and current_location:
@@ -171,12 +208,22 @@ def rebuild_menu():
 
     if distance_monitor_running:
         menu = Menu(
-            item(toggle_label, toggle_distance_monitor, enabled=False),  # Disable menu item while running
-            item(threshold_str, lambda: None, enabled=False),  # Show the threshold value
-            item(initial_loc_str, lambda: None, enabled=False),  # Show the initial location
-            item(current_loc_str, lambda: None, enabled=False),  # Show the current location
-            item(distance_moved_str, lambda: None, enabled=False),  # Show the distance moved
-            item('Quit', quit_app, enabled=False)  # Disable Quit while running
+            item(
+                toggle_label, toggle_distance_monitor, enabled=False
+            ),  # Disable menu item while running
+            item(
+                threshold_str, lambda: None, enabled=False
+            ),  # Show the threshold value
+            item(
+                initial_loc_str, lambda: None, enabled=False
+            ),  # Show the initial location
+            item(
+                current_loc_str, lambda: None, enabled=False
+            ),  # Show the current location
+            item(
+                distance_moved_str, lambda: None, enabled=False
+            ),  # Show the distance moved
+            item("Quit", quit_app, enabled=False),  # Disable Quit while running
         )
     else:
         menu = Menu(
@@ -184,11 +231,13 @@ def rebuild_menu():
             item(threshold_str, lambda: None, enabled=False),
             item(initial_loc_str, lambda: None, enabled=False),
             item(current_loc_str, lambda: None, enabled=False),
-            item(distance_moved_str, lambda: None, enabled=False),  # Show the distance moved
-            item('Quit', quit_app)
+            item(
+                distance_moved_str, lambda: None, enabled=False
+            ),  # Show the distance moved
+            item("Quit", quit_app),
         )
     icon.menu = menu
-    
+
 
 # Function to quit the app
 def quit_app(icon, item):
@@ -200,6 +249,7 @@ def quit_app(icon, item):
     exit_event = True
     icon.stop()
 
+
 # Set up pystray for the menu bar icon
 def setup_icon():
     global icon
@@ -207,14 +257,17 @@ def setup_icon():
     rebuild_menu()  # Rebuild the menu with available options
     icon.run()
 
+
 # Hotkey handler using pynput
 def on_press(key):
     pass
+
 
 # Set up listener for hotkeys in a separate thread
 def listen_hotkey():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
+
 
 # Run the menu bar icon on the main thread
 setup_icon()
