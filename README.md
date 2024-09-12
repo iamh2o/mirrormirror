@@ -2,7 +2,9 @@
 _[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
 
 
-> Inspired after taking in [this talk](https://kolektiva.media/w/uvD1wWTRoh7HEto8zeSswr?start=1s) from the [Four Thieves Vinegar Collective](https://fourthievesvinegar.org), [_who are super rad_](https://github.com/FourThievesVinegar).
+> Inspired by two events:
+> (one long ago) [an arrest](https://www.theregister.com/2015/02/04/ross_ulbricht_guilty_verdict/).
+> (one recent) After taking in [this talk](https://kolektiva.media/w/uvD1wWTRoh7HEto8zeSswr?start=1s) from the [Four Thieves Vinegar Collective](https://fourthievesvinegar.org), [_who are super rad_](https://github.com/FourThievesVinegar).
 
 
 Three tools for times you wish to automatically lock your MAC laptop if:
