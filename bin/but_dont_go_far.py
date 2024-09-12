@@ -10,8 +10,12 @@ from pynput import keyboard
 import CoreLocation
 import objc
 
-# sys.argv[1] = distance_threshold in km, can be float
 
+# sys.argv[1] = distance_threshold in km, can be float
+if len(sys.argv) < 2:
+    print("Usage: python but_dont_go_far.py <distance_threshold in km, float>")
+    sys.exit(1)
+    
 # Setup logging
 logging.basicConfig(
     filename="distance_monitor.log",
@@ -102,6 +106,7 @@ def distance_monitor_loop():
         print(
             f"New location: {new_location}, Start location: {initial_location}, Distance Moved: {last_distance_moved}"
         )
+        rebuild_menu(current_loc=new_location) 
         if new_location:
             current_location = new_location
             distance_moved = calculate_distance(initial_location, current_location)
@@ -174,7 +179,7 @@ def update_icon():
 
 
 # Function to rebuild the menu dynamically
-def rebuild_menu():
+def rebuild_menu(current_loc='n/a',dist_moved='n/a'):
     global initial_location, current_location
     toggle_label = (
         "Disable Distance Monitor"
@@ -192,13 +197,13 @@ def rebuild_menu():
         else "Initial Location: N/A"
     )
     current_loc_str = (
-        f"Current Location: {current_location}"
-        if current_location
+        f"Current Location: {current_loc}"
+        if current_loc
         else "Current Location: N/A"
     )
 
     # Calculate distance moved from initial location if both locations are available
-    if initial_location and current_location:
+    if current_location not in (None, 'n/a'):
         distance_moved = calculate_distance(initial_location, current_location)
         distance_moved_str = f"Distance Moved: {distance_moved:.2f} km"
     else:
