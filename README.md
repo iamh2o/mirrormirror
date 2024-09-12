@@ -192,8 +192,15 @@ launchctl load ~/Library/LaunchAgents/com.username.youcanleave.plist # rename to
 <hr>
 
 ## But Dont Go Far
+<<<<<<< HEAD
 _not quite tested for location violation triggering_
 A script to lock your MAC laptop if it moves more than a set distance from the starting location the tool detected in some period of time.
+=======
+
+![gf](icons/gf_enabled.png)
+
+A script to lock your MAC laptop if it moves more than a set distance in some period of time.
+>>>>>>> 1c66f4be310ed36f1cea8d92513a9c6ffc11aa8a
 
 
 ### Behavior
@@ -249,4 +256,8 @@ launchctl load ~/Library/LaunchAgents/com.username.butdontgofar.plist # renme to
 
 
 ## Issues Observed
+<<<<<<< HEAD
 - The face recognition library had a problem with the venvdlib, which necessitated brew python update and cmake update, then re-pip installing dlib  dlib-19.24.6.
+=======
+- The face recognition library had a problem with the conda dlib, which necessitated brew python update and cmake update, then repip installing dlib  dlib-19.24.6.
+>>>>>>> 1c66f4be310ed36f1cea8d92513a9c6ffc11aa8a
