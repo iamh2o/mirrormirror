@@ -1,4 +1,4 @@
-# mirrormirror (v0.2.7.3)
+# mirrormirror (v0.2.7.5)
 _[In Collaboration With Cal (neé ChatGPT4o)](#in-collaboration-with-cal-neé-chatgpt4o)
 
 
