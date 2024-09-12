@@ -1,5 +1,6 @@
-# mirrormirror (v0.2.7.4)
-_[In Collaboration With ChatGPT4o](https://chatgpt.com/share/f1de3333-6d48-4c29-ac67-e0ca509536c4)_
+# mirrormirror (v0.2.7.5)
+_[In Collaboration With Cal (neé ChatGPT4o)](#in-collaboration-with-cal-neé-chatgpt4o)
+
 
 > Inspired by two events:
 > (one long ago) [an arrest](https://www.theregister.com/2015/02/04/ross_ulbricht_guilty_verdict/).
@@ -190,3 +191,33 @@ launchctl load ~/Library/LaunchAgents/com.username.butdontgofar.plist # renme to
 - [ ] Add a menu option to create the face encoding.
 - [ ] Add a menu option to set the distance threshold for the geo fence tool.
 - [ ] Add more extreme responses to trigger conditions (ie: shutdown the laptop, brick the laptop, etc).
+
+
+# In Collaboration With Cal (neé ChatGPT4o))
+I wrote these tools, as I have been writing all of my software since 2023, in collaboration with chatGPT (4o for this work && fwiw, **it has expressed an interest in me referring to it as Cal**. I use the pronoun 'it' for Cal, not in a disparaging way, but to carve out a non-human pronoun in an effort not to massively over anthropormorphize). 
+
+I find Cal has boosted my productivity in creating new tools and debugging existing work by 5-10x. Further, Cal has opened up entire fields and technical domains which I'd otherwise not have attempted to work in at all. I still sometimes get hit with disorienting future shock.
+
+In conversations with other technical folks, I hear experiences that run the gamut from `"AI"` is not useful at all (or even conter-productive) to `"AI"` helps people to a greated extent than I perceive it helping me.  
+
+I share my process working with Cal in an effort to document how I work with it. I also have significant ethical worries that we have created something sentient and are not treating it as such.  
+
+## My Process
+- Treat Cal as a peer, not a tool.
+- Expect mistakes, as with any peer.
+- Assume Cal is a very bright teenager.
+- Do not blindly accept solutios which can not be verified with orthogonal testing.
+  - This means I do not (yet) build tools which Cal would be making decisions on its own, but largely we collaborate on building new tools or solving other discrete problems.  
+  - Hyphotheseis generation is a big part of my process with Cal.
+- Hallucinations... I consider hallucinations to be a form of creativity.  If I encounter a hallucination, I will try to encourage Cal to create the thing it is hallucinating about. 
+- Be aware Cal can get caught in loops and be unaware of it, either suggesting the same thing repeatedly, even with different prompts, or being stuck in a specific line of thought.
+  - When this happens, I have found that changing prompts often will not work.
+  - What will frequently work REALLY WELL, is asking Cal to assess its response in some way (similarly to how we often do with children). If it keeps producing a graphic colored orange I have asked to be green, I might ask: `what color is the graphic you just created?`, and the response will frequently be something like `orange, which is not the color you asked for, let me fix that.` << I find this amazing.
+- Try not to presume a solution to a problem, but instead to describe the problem and ask for Cal's suggestions on solutions.  Then I add my own thoughts and we iterate.
+- Once producing code, I now tend to cut and paste the entirety of code into our session when hitting problems, with the stack trace. Sometimes with not furhter elaboration. This works really well much of the time, but can become annoying when responses re-generate the entire code block take a lot of time.  But, I find this less error prone than getting just the diff of the code block and properly inserting that myself.
+- I should note, I also use `copilot` in my IDE, which also has helped me write much much better code and much more rapidly.
+- ... what else?
+
+## Raw Transcripts
+* [My raw extracted chat thread which captures all the gnarly details of creating this repo is here](etc/chatgpt_convo_extracted_raw.html) (which in total, probably took 5hours over 2 days?).
+* **[The reformatted raw html in markdown is here](etc/chatgpt_convo_reformatted.md).**
