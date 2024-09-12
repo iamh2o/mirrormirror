@@ -184,3 +184,8 @@ And register the launchagent to run at login.
 launchctl load ~/Library/LaunchAgents/com.username.butdontgofar.plist # renme to match scipt name above
 ```
 
+
+# Future Work
+- [ ] Add a menu option to create the face encoding.
+- [ ] Add a menu option to set the distance threshold for the geo fence tool.
+- [ ] Add more extreme responses to trigger conditions (ie: shutdown the laptop, brick the laptop, etc).
