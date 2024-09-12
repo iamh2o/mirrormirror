@@ -60,6 +60,32 @@ cd mirrormirror
 brew install blueutil ffmpeg cmake python@3.12
 ```
 
+Versions of these tools (I think ffmpeg is not needed, but am not removing w/out testing removal first):
+```zsh
+python --version  
+Python 3.12.6
+
+blueutil --version
+2.10.0
+
+cmake --version  
+cmake version 3.30.3
+
+ffmpeg -version   
+ffmpeg version 7.0.2 Copyright (c) 2000-2024 the FFmpeg developers
+built with Apple clang version 15.0.0 (clang-1500.3.9.4)
+configuration: --prefix=/opt/homebrew/Cellar/ffmpeg/7.0.2 --enable-shared --enable-pthreads --enable-version3 --cc=clang --host-cflags= --host-ldflags='-Wl,-ld_classic' --enable-ffplay --enable-gnutls --enable-gpl --enable-libaom --enable-libaribb24 --enable-libbluray --enable-libdav1d --enable-libharfbuzz --enable-libjxl --enable-libmp3lame --enable-libopus --enable-librav1e --enable-librist --enable-librubberband --enable-libsnappy --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtesseract --enable-libtheora --enable-libvidstab --enable-libvmaf --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libxvid --enable-lzma --enable-libfontconfig --enable-libfreetype --enable-frei0r --enable-libass --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libspeex --enable-libsoxr --enable-libzmq --enable-libzimg --disable-libjack --disable-indev=jack --enable-videotoolbox --enable-audiotoolbox --enable-neon
+libavutil      59.  8.100 / 59.  8.100
+libavcodec     61.  3.100 / 61.  3.100
+libavformat    61.  1.100 / 61.  1.100
+libavdevice    61.  1.100 / 61.  1.100
+libavfilter    10.  1.100 / 10.  1.100
+libswscale      8.  1.100 /  8.  1.100
+libswresample   5.  1.100 /  5.  1.100
+libpostproc    58.  1.100 / 58.  1.100
+```
+
+
 ### Python venv
 _I would usually use conda, but for some reason, it was a huge pain to get MacOS to recognize conda python as allowed to use loc services... so I used venv._
 
@@ -71,6 +97,7 @@ pip install pystray pynput requests pyobjc-framework-CoreLocation pyobjc-core py
 
 bash bin/hb.sh # only needs to be run 1x a year
 ```
+  - The specific versions of the packages used are in [`requirements.txt`](requirements.txt).
 
 <hr>
 <hr> 
